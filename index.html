@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Heat Map</title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.6.1/d3.min.js" integrity="sha512-MefNfAGJ/pEy89xLOFs3V6pYPs6AmUhXJrRlydI/9wZuGrqxmrdQ80zKHUcyadAcpH67teDZcBeS6oMJLPtTqw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
         <link rel="stylesheet" href="styles.css">
         <script src="https://kit.fontawesome.com/ba7f655f8f.js" crossorigin="anonymous"></script>
     </head>
@@ -15,7 +15,18 @@
                 .then(response => response.json())
                 .then(response => {
                     const { monthlyVariance } = response;
+                    collectedData({ monthlyVariance})
                 })
+                function collectedData(data) {
+                    const header = d3.select('body')
+                                     .append('header')
+                    const title = header.append('text')
+                                        .attr('id', 'title')
+                                        .text('Monthly Global Land-Surface Temperature')
+                    const description = header.append('text')
+                                              .attr('id', 'description')
+                                              .text('1753 - 2015: base temperature 8. 66℃')
+                }
 
         </script>
     </body>
