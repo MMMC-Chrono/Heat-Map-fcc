@@ -57,7 +57,12 @@
                        .attr('transform', 'translate(' + (p * 4) + ",0)")
                        .attr('id', 'y-axis')
                        .call(yAxis)
-                         
+                       
+                    const rect = svg.selectAll('rect')
+                                    .data(data)
+                                    .enter()
+                                    .append('rect')
+                                    .attr('class', 'cell')
                 }
 
         </script>
