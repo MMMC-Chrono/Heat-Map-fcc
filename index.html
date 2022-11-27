@@ -15,17 +15,49 @@
                 .then(response => response.json())
                 .then(response => {
                     const { monthlyVariance } = response;
-                    collectedData({ monthlyVariance})
+                    collectedData(monthlyVariance)
                 })
                 function collectedData(data) {
                     const header = d3.select('body')
                                      .append('header')
-                    const title = header.append('text')
+                    const title = header.append('h1')
                                         .attr('id', 'title')
                                         .text('Monthly Global Land-Surface Temperature')
-                    const description = header.append('text')
+                    const description = header.append('h3')
                                               .attr('id', 'description')
-                                              .text('1753 - 2015: base temperature 8. 66℃')
+                                              .text('1753 - 2015: base temperature 8. 66℃');
+                    const w = 1600;
+                    const h = 540;
+                    const p = 30;
+
+                    const svg = d3.select('body')
+                                  .append('svg')
+                                  .attr('width', w)
+                                  .attr('height', h)
+                                  .attr('preserveAspectRatio', 'xMidYMid meet')
+
+                    const xScale = d3.scaleLinear()
+                                     .domain([d3.min(data, (d, i) => d.year), d3.max(data, (d, i) => d.year)])
+                                     .range([(p * 4), (w - p)]);
+                            
+                    const xAxis = d3.axisBottom(xScale)
+                                    .tickFormat(d3.format('d'))
+                    svg.append('g')
+                       .attr('transform', 'translate(0, ' + (h - p) + ")")
+                       .attr('id', 'x-axis')
+                       .call(xAxis)
+                    
+                    const yScale = d3.scaleTime()
+                                     .domain([new Date("2021-12-15"), new Date("2022-12-19")])
+                                     .range([p, h - p])
+                        
+                    const yAxis = d3.axisLeft(yScale)
+                                    .tickFormat(d3.timeFormat("%B"))
+                    svg.append('g')
+                       .attr('transform', 'translate(' + (p * 4) + ",0)")
+                       .attr('id', 'y-axis')
+                       .call(yAxis)
+                         
                 }
 
         </script>
