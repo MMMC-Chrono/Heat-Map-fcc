@@ -63,6 +63,21 @@
                                     .enter()
                                     .append('rect')
                                     .attr('class', 'cell')
+                                    .attr('x', (d) => xScale(d.year))
+                                    .attr('y', (d) => {
+                                        let returnMonth;
+                                        if (d.month === 1) {
+                                            returnMonth = new Date("2021-12-15");
+                                        } else {
+                                            returnMonth = new Date("2022-"+(d.month - 1)+"-15");
+                                        }
+                                        return yScale(returnMonth);
+                                    })
+                                    .attr('width', w / (d3.max(data, (d, i) => d.year) -  d3.min(data, (d, i) => d.year)))
+                                    .attr('height', h / 12)
+                                    .attr('fill', (d) => {
+                                        console.log(d)
+                                    })
                 }
 
         </script>
