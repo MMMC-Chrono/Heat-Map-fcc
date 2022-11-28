@@ -58,6 +58,12 @@
                        .attr('id', 'y-axis')
                        .call(yAxis)
                        
+                    const coldest = '#0099ff';
+                    const cold = '#66ccff';
+                    const normal = '#fffff5';
+                    const hot = '#ff9966';
+                    const hottest = '#ff3300';
+
                     const rect = svg.selectAll('rect')
                                     .data(data)
                                     .enter()
@@ -76,7 +82,11 @@
                                     .attr('width', w / (d3.max(data, (d, i) => d.year) -  d3.min(data, (d, i) => d.year)))
                                     .attr('height', h / 12)
                                     .attr('fill', (d) => {
-                                        console.log(d)
+                                        let variance = d.variance;
+                                        return variance < 5.228 && variance >= 2.614 ? hottest :
+                                        variance < 2.614 && variance >= 1 ? hot :
+                                        variance < 1 && variance >= -1 ? normal :
+                                        variance < -1 && variance >= -3.488 ? cold : coldest;
                                     })
                 }
 
