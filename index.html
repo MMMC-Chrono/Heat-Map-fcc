@@ -49,7 +49,7 @@
                        .call(xAxis)
                     
                     const yScale = d3.scaleTime()
-                                     .domain([new Date("2021-12-15"), new Date("2022-12-19")])
+                                     .domain([new Date("2021-12-15"), new Date("2022-12-15")])
                                      .range([p, h - pB])
                         
                     const yAxis = d3.axisLeft(yScale)
@@ -58,14 +58,9 @@
                        .attr('transform', 'translate(' + (p * 4) + ",0)")
                        .attr('id', 'y-axis')
                        .call(yAxis)
-                       
-                    const coldest = '#0099ff';
-                    const cold = '#66ccff';
-                    const normal = '#fffff5';
-                    const hot = '#ff9966';
-                    const hottest = '#ff3300';
-                    const tempColor = ['#ff3300', '#ff9966', '#ffffea', '#99ddff', '#0099ff'];
-                    const temps = [5.228, 2.614, 1, -1, -3.488, -6.976]
+                    
+                    const tempColor = ['#ff3300', '#ff9966','#ffd9b3', '#fffff3', '#99ddff', '#008ae6'];
+                    const temps = [5.228, 2.614, 1, 0, -1, -3.488, -6.976]
 
                     const rect = svg.selectAll('rect')
                                     .data(data)
@@ -78,18 +73,19 @@
                                         if (d.month === 1) {
                                             returnMonth = new Date("2021-12-14");
                                         } else {
-                                            returnMonth = new Date("2022-"+(d.month - 1)+"-15");
+                                            returnMonth = new Date("2022-"+(d.month - 1)+"-14");
                                         }
                                         return yScale(returnMonth);
                                     })
                                     .attr('width', w / (d3.max(data, (d, i) => d.year) -  d3.min(data, (d, i) => d.year)))
-                                    .attr('height', h / 14.5)
+                                    .attr('height', h / 15.5)
                                     .attr('fill', (d) => {
                                         let variance = d.variance;
                                         return variance < temps[0] && variance >= temps[1] ? tempColor[0] :
                                         variance < temps[1] && variance >= temps[2] ? tempColor[1] :
                                         variance < temps[2] && variance >= temps[3] ? tempColor[2] :
-                                        variance < temps[3] && variance >= temps[4] ? tempColor[3] : tempColor[4];
+                                        variance < temps[3] && variance >= temps[4] ? tempColor[3] :
+                                        variance < temps[4] && variance >= temps[5] ? tempColor[4] : tempColor[5];
                                     })
                                     .attr('data-month', (d) => d.month - 1)
                                     .attr('data-year', (d) => d.year)
