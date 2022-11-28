@@ -49,7 +49,7 @@
                        .call(xAxis)
                     
                     const yScale = d3.scaleTime()
-                                     .domain([new Date("2021-12-14"), new Date("2022-12-15")])
+                                     .domain([new Date("2021-12-15"), new Date("2022-12-19")])
                                      .range([p, h - pB])
                         
                     const yAxis = d3.axisLeft(yScale)
@@ -74,14 +74,14 @@
                                     .attr('y', (d) => {
                                         let returnMonth;
                                         if (d.month === 1) {
-                                            returnMonth = new Date("2021-12-14");
+                                            returnMonth = new Date("2021-12-15");
                                         } else {
-                                            returnMonth = new Date("2022-"+(d.month - 1)+"-14");
+                                            returnMonth = new Date("2022-"+(d.month - 1)+"-15");
                                         }
                                         return yScale(returnMonth);
                                     })
                                     .attr('width', w / (d3.max(data, (d, i) => d.year) -  d3.min(data, (d, i) => d.year)))
-                                    .attr('height', h / 15.6)
+                                    .attr('height', h / 14.5)
                                     .attr('fill', (d) => {
                                         let variance = d.variance;
                                         return variance < 5.228 && variance >= 2.614 ? hottest :
@@ -92,6 +92,10 @@
                                     .attr('data-month', (d) => d.month - 1)
                                     .attr('data-year', (d) => d.year)
                                     .attr('data-temp', (d) => d.variance + 8.66)
+
+                    const legend = svg.append('legend')
+                                      .attr('id', 'legend')
+                                      .append('rect')
                 }
 
         </script>
