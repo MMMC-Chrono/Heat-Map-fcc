@@ -88,6 +88,8 @@
                                         variance < 1 && variance >= -1 ? normal :
                                         variance < -1 && variance >= -3.488 ? cold : coldest;
                                     })
+                                    .attr('data-month', (d) => d.month - 1)
+                                    .attr('data-year', (d) => d.year)
                 }
 
         </script>
