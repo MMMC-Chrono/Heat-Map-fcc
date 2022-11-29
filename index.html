@@ -18,64 +18,78 @@
                     collectedData(monthlyVariance)
                 })
                 function collectedData(data) {
-                    const header = d3.select('body')
+                    const section = d3.select('body')
+                                      .append('section')
+
+                    const header = d3.select('section')
                                      .append('header')
+
                     const title = header.append('h1')
                                         .attr('id', 'title')
                                         .text('Monthly Global Land-Surface Temperature')
+
                     const description = header.append('h3')
                                               .attr('id', 'description')
                                               .text('1753 - 2015: base temperature 8. 66℃');
+
+                    const tooltip = d3.select('body')
+                                      .append('div')
+                                      .attr('id', 'tooltip')
+                                      .style('top', 0)
+                                      .style('left', 0)
+                                      .style('opacity', 0)
+                                      
                     const w = 1600;
                     const h = 540;
                     const p = 30;
                     const pB = 100;
 
-                    const svg = d3.select('body')
+                    const svg = d3.select('section')
                                   .append('svg')
                                   .attr('width', w)
                                   .attr('height', h)
                                   .attr('preserveAspectRatio', 'xMidYMid meet')
-
+                    //xAxis
                     const xScale = d3.scaleLinear()
                                      .domain([d3.min(data, (d, i) => d.year), d3.max(data, (d, i) => d.year)])
                                      .range([(p * 4), (w - p)]);
-                            
                     const xAxis = d3.axisBottom(xScale)
                                     .tickFormat(d3.format('d'))
                     svg.append('g')
                        .attr('transform', 'translate(0, ' + (h - pB) + ")")
                        .attr('id', 'x-axis')
                        .call(xAxis)
-                    
+                    //yAxis
                     const yScale = d3.scaleTime()
                                      .domain([new Date("2021-12-15"), new Date("2022-12-15")])
                                      .range([p, h - pB])
-                        
                     const yAxis = d3.axisLeft(yScale)
                                     .tickFormat(d3.timeFormat("%B"))
                     svg.append('g')
                        .attr('transform', 'translate(' + (p * 4) + ",0)")
                        .attr('id', 'y-axis')
                        .call(yAxis)
+                    //function for vertical location
+                    function monthValue(value) {
+                        let returnMonth;
+                        if (value === 1) {
+                            returnMonth = new Date("2021-12-14");
+                        } else {
+                            returnMonth = new Date("2022-"+(value - 1)+"-14");
+                        }
+                        return yScale(returnMonth);
+                    }
                     
-                    const tempColor = ['#ff3300', '#ffb899','#fffff3','#cceeff', '#66ccff', '#008ae6', '#003399'];
+                    const tempColor = ['#ff3300', '#ffb899','#fffff3','#cceeff', '#66ccff', '#008ae6'];
                     const temps = [5.228, 3.194, 1.16, -0.874, -2.908, -4.942, -6.976]
+                    
                     const rect = svg.selectAll('rect')
                                     .data(data)
                                     .enter()
                                     .append('rect')
                                     .attr('class', 'cell')
                                     .attr('x', (d) => xScale(d.year))
-                                    .attr('y', (d) => {
-                                        let returnMonth;
-                                        if (d.month === 1) {
-                                            returnMonth = new Date("2021-12-14");
-                                        } else {
-                                            returnMonth = new Date("2022-"+(d.month - 1)+"-14");
-                                        }
-                                        return yScale(returnMonth);
-                                    })
+                                    .attr('y', (d) => monthValue(d.month))
                                     .attr('width', w / (d3.max(data, (d, i) => d.year) -  d3.min(data, (d, i) => d.year)))
                                     .attr('height', h / 15.5)
                                     .attr('fill', (d) => {
@@ -89,31 +103,40 @@
                                     .attr('data-month', (d) => d.month - 1)
                                     .attr('data-year', (d) => d.year)
                                     .attr('data-temp', (d) => d.variance + 8.66)
+                                    .on('mouseover', (d, i) => {
+                                        console.log(d, monthValue(i.month))                                        
+                                        tooltip.style('top', monthValue(i.month)+'px')
+                                               .style('left', xScale(i.year)+'px')
+                                               .style('opacity', 1)
+                                    })
+                                    .on('mouseout', (d, i) => {
+                                        tooltip.style('opacity', 0)
+                                    })
 
-
+                    //xAxis for legend
                     const xScaleLegend = d3.scaleLinear()
-                                           .domain([temps[6]+8.66 - 1, temps[0]+8.66 + 1])
+                                           .domain([temps[6]+8.66, temps[0]+8.66])
                                            .range([200, 450])
-
                     const xAxisLegend = d3.axisBottom(xScaleLegend)
-                                          .tickValues(temps.map((temp) => temp+8.66))
-                                          
                     svg.append('g')
                        .attr('transform', 'translate(0,500)')
                        .call(xAxisLegend)
+                    //temps for legend
+                    const tempsL = [3.194, 1.16, -0.874, -2.908, -4.942, -6.976]
+                    //legend
                     const legend = svg.append('g')
                                       .attr('id', 'legend')
                                       .attr('transform', 'translate(0, 479.5)')
                                       .selectAll('rect')
-                                      .data(temps)
+                                      .data(tempsL)
                                       .enter()
                                       .append('rect')
-                                      .attr('x', (temps) => xScaleLegend(temps)+134.5)
+                                      .attr('x', (temps) => xScaleLegend(temps)+177)
                                       .attr('y', 0)
-                                      .attr('width', 36)
+                                      .attr('width', 42)
                                       .attr('height', 20)
                                       .attr('fill', (temp, i) => tempColor[i])
-                       
+
                 }
 
         </script>
