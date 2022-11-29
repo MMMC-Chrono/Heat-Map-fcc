@@ -38,7 +38,7 @@
                                       .style('top', 0)
                                       .style('left', 0)
                                       .style('opacity', 0)
-                                      
+
                     const w = 1600;
                     const h = 540;
                     const p = 30;
@@ -103,11 +103,14 @@
                                     .attr('data-month', (d) => d.month - 1)
                                     .attr('data-year', (d) => d.year)
                                     .attr('data-temp', (d) => d.variance + 8.66)
-                                    .on('mouseover', (d, i) => {
-                                        console.log(d, monthValue(i.month))                                        
-                                        tooltip.style('top', monthValue(i.month)+'px')
-                                               .style('left', xScale(i.year)+'px')
+                                    .on('mouseover', (d, i) => {                                      
+                                        tooltip.style('top', (monthValue(i.month)+140)+'px')
+                                               .style('left', (xScale(i.year)+5)+'px')
                                                .style('opacity', 1)
+                                               .html('Year: ' + i.year + '<br/>' + 'Temperature: ' +
+                                                (Math.round((i.variance+8.66)*100)/100) + ' ℃ <br/> Variance: ' +
+                                                i.variance )
+                                        document.querySelector('#tooltip').setAttribute('data-year', i.year)
                                     })
                                     .on('mouseout', (d, i) => {
                                         tooltip.style('opacity', 0)
